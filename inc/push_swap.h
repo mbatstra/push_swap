@@ -6,7 +6,7 @@
 /*   By: mbatstra <mbatstra@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 11:14:33 by mbatstra          #+#    #+#             */
-/*   Updated: 2022/05/22 18:10:29 by mbatstra         ###   ########.fr       */
+/*   Updated: 2022/05/23 19:35:23 by mbatstra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ typedef struct	s_value
 	int	i_new;
 }				t_value;
 
-t_list	**msort(t_list **lst);
+void	msort(t_list **lst, char mode);
+void	validate_input(int argc, char **argv);
+void	parse(t_list **list, int argc, char **argv);
+void	new_index(t_list **lst);
 void	swap(t_list **lst, char mode);
 void	swap_s(t_list **stack_a, t_list **stack_b);
 void	rot(t_list **stack, char mode);

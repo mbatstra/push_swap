@@ -6,84 +6,94 @@
 /*   By: mbatstra <mbatstra@student.codam.nl>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/17 15:47:57 by mbatstra          #+#    #+#             */
-/*   Updated: 2022/05/21 19:48:50 by mbatstra         ###   ########.fr       */
+/*   Updated: 2022/05/23 19:23:53 by mbatstra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "push_swap.h"
 #include "libft.h"
 
-t_list	*lst_get(t_list *lst, int n)
+// split into left and right
+// left points to head
+// right one past middle point
+static void	split_lst(t_list *head, t_list **left, t_list **right)
 {
-	t_list	*node;
+	t_list	*mid;
+	int		i;
 
-	node = lst;
-	while (n > 0 && node != NULL)
+	i = 1;
+	mid = head;
+	while (i < ft_lstsize(head) / 2)
 	{
-		node = node->next;
-		n--;
+		mid = mid->next;
+		i++;
 	}
-	return (node);
+	*left = head;
+	*right = mid->next;
+	mid->next = NULL;
 }
 
-static t_list	**merge(t_list **left, t_list **right)
+// sort by old index, new index, or value
+// other than sorting factor each block here is the same
+static int	compare(t_list *left, t_list *right, char mode)
 {
-	t_list	**new;
-	t_list	*init;
-	t_list	*head_l;
-	t_list	*head_r;
-
-	init = NULL;
-	new = &init;
-	head_l = *left;
-	head_r = *right;
-	while (head_l != NULL && head_r != NULL)
+	if (mode == 'o')
 	{
-		if (head_l != NULL)
-		{
-			if (((t_list *)(head_l->content))->val < ((t_list *)(head_r->content))->val)
-			{
-				ft_lstadd_back(new, head_l);
-				head_l = head_l->next;
-			}
-		}
-		else if (head_r != NULL)
-		{
-			if (((t_list *)(head_l->content))->val >= ((t_list *)(head_r->content))->val)
-			{
-				ft_lstadd_back(new, head_r);
-				head_r = head_r->next;
-			}
-		}
+		if (((t_value *)(left->content))->i_old <= \
+		((t_value *)(right->content))->i_old)
+			return (1);
+		return (0);
+	}
+	else if (mode == 'n')
+	{
+		if (((t_value *)(left->content))->i_new <= \
+		((t_value *)(right->content))->i_new)
+			return (1);
+		return (0);
+	}
+	else
+	{
+		if (((t_value *)(left->content))->val <= \
+		((t_value *)(right->content))->val)
+			return (1);
+		return (0);
+	}
+}
+
+// recur through left and right to merge into new
+static t_list	*merge(t_list *left, t_list *right, char mode)
+{
+	t_list	*new;
+
+	if (left == NULL)
+		return (right);
+	else if (right == NULL)
+		return (left);
+	if (compare(left, right, mode))
+	{
+		new = left;
+		new->next = merge(left->next, right, mode);
+	}
+	else
+	{
+		new = right;
+		new->next = merge(left, right->next, mode);
 	}
 	return (new);
 }
 
 // split lst into sublists of len 1, return merged result
-t_list	**msort(t_list **lst)
+void	msort(t_list **lst, char mode)
 {
-	t_list	**lst1;
-	t_list	**lst2;
-	t_list	*init;
-	t_list	*node;
-	int		i;
+	t_list	*head;
+	t_list	*left;
+	t_list	*right;
 
 	if (ft_lstsize(*lst) <= 1)
-		return (lst);
-	init = NULL;
-	lst1 = &init;
-	lst2 = &init;
-	node = *lst;
-	i = 0;
-	while (node != NULL)
-	{
-		if (i < ft_lstsize(*lst) / 2)
-			ft_lstadd_back(lst1, node);
-		else
-			ft_lstadd_back(lst2, node);
-		node = node->next;
-		i++;
-	}
-	msort(lst1);
-	msort(lst2);
-	return (merge(lst1, lst2));
+		return ;
+	head = *lst;
+	split_lst(head, &left, &right);
+	msort(&left, mode);
+	msort(&right, mode);
+	*lst = merge(left, right, mode);
 }

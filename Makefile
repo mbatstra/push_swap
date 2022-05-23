@@ -8,7 +8,8 @@ UNPREFIXED_SRC = main.c \
 swap.c \
 rotate.c \
 push.c \
-mergesort.c
+mergesort.c \
+parse.c
 
 TEST_SRC = test/test.c
 
