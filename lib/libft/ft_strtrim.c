@@ -26,7 +26,6 @@ static int	is_inset(char c, char const *set)
 char	*ft_strtrim(char const *s1, char const *set)
 {
 	size_t	new_len;
-	size_t	ret_value;
 	char	*new_str;
 
 	while (is_inset(*s1, set))
@@ -42,6 +41,6 @@ char	*ft_strtrim(char const *s1, char const *set)
 	new_str = (char *) malloc((new_len + 1) * sizeof(char));
 	if (!new_str)
 		return (new_str);
-	ret_value = ft_strlcpy(new_str, s1, new_len + 1);
+	ft_strlcpy(new_str, s1, new_len + 1);
 	return (new_str);
 }

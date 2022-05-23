@@ -74,23 +74,15 @@ static void	parse(t_list **list, int argc, char **argv)
 int	main(int argc, char **argv)
 {
 	t_list	*stack_a;
-	t_list	*stack_b;
+	t_list	**stack_b;
 
 	validate_input(argc, argv);
 	parse(&stack_a, argc, argv);
-	parse(&stack_b, argc, argv);
-	push_b(&stack_a, &stack_b);
-	// push_a(&stack_a, &stack_b);
-	while (stack_a != NULL)
+	stack_b = msort(&stack_a);
+	while (*stack_b != NULL)
 	{
-		ft_printf("%d\n", ((t_value *)stack_a->content)->val);
-		stack_a = stack_a->next;
+		ft_printf("%d, %d\n", ((t_value *)(*stack_b)->content)->val, ((t_value *)(*stack_b)->content)->i_old);
+		*stack_b = (*stack_b)->next;
 	}
-	while (stack_b != NULL)
-	{
-		ft_printf("%d\n", ((t_value *)stack_b->content)->val);
-		stack_b = stack_b->next;
-	}
-	// ft_lstclear(&stack_a, &free);
 	return (0);
 }

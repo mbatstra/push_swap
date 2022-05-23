@@ -49,10 +49,8 @@ static int	get_opcode(char type)
 
 static int	pt_value(long long arg, char type)
 {
-	int	opcode;
 	int	count;
 
-	opcode = get_opcode(type);
 	count = 1;
 	if (type == '%')
 		write(1, "%", 1);

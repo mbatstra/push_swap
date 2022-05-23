@@ -12,7 +12,6 @@
 
 #include "libft.h"
 
-// get nth element of list, or NULL if elemt doesn't exist
 t_list	*lst_get(t_list *lst, int n)
 {
 	t_list	*node;
@@ -26,37 +25,65 @@ t_list	*lst_get(t_list *lst, int n)
 	return (node);
 }
 
-// split lst into sublists of len 1, return merged result
-void	msort(t_list **lst, int len)
+static t_list	**merge(t_list **left, t_list **right)
 {
-	t_list	**left;
-	t_list	**right;
-	t_list	*node;
+	t_list	**new;
 	t_list	*init;
+	t_list	*head_l;
+	t_list	*head_r;
+
+	init = NULL;
+	new = &init;
+	head_l = *left;
+	head_r = *right;
+	while (head_l != NULL && head_r != NULL)
+	{
+		if (head_l != NULL)
+		{
+			if (((t_list *)(head_l->content))->val < ((t_list *)(head_r->content))->val)
+			{
+				ft_lstadd_back(new, head_l);
+				head_l = head_l->next;
+			}
+		}
+		else if (head_r != NULL)
+		{
+			if (((t_list *)(head_l->content))->val >= ((t_list *)(head_r->content))->val)
+			{
+				ft_lstadd_back(new, head_r);
+				head_r = head_r->next;
+			}
+		}
+	}
+	return (new);
+}
+
+// split lst into sublists of len 1, return merged result
+t_list	**msort(t_list **lst)
+{
+	t_list	**lst1;
+	t_list	**lst2;
+	t_list	*init;
+	t_list	*node;
 	int		i;
 
 	if (ft_lstsize(*lst) <= 1)
 		return (lst);
 	init = NULL;
-	left = &init;
-	right = &init;
+	lst1 = &init;
+	lst2 = &init;
 	node = *lst;
 	i = 0;
 	while (node != NULL)
 	{
-		if (i < len / 2)
-			ft_lstadd_back(left, node);
+		if (i < ft_lstsize(*lst) / 2)
+			ft_lstadd_back(lst1, node);
 		else
-			ft_lstadd_back(right, node);
-		i++;
+			ft_lstadd_back(lst2, node);
 		node = node->next;
+		i++;
 	}
-	msort(left, ft_lstsize(*left));
-	msort(right, ft_lstsize(*right));
-	merge(left, right);
-}
-
-void	merge(t_list **left, t_list **right)
-{
-
+	msort(lst1);
+	msort(lst2);
+	return (merge(lst1, lst2));
 }

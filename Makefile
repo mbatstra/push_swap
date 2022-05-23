@@ -7,7 +7,8 @@ BUILD_DIR = build/
 UNPREFIXED_SRC = main.c \
 swap.c \
 rotate.c \
-push.c
+push.c \
+mergesort.c
 
 TEST_SRC = test/test.c
 

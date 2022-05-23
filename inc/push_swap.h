@@ -21,6 +21,7 @@ typedef struct	s_value
 	int	i_new;
 }				t_value;
 
+t_list	**msort(t_list **lst);
 void	swap(t_list **lst, char mode);
 void	swap_s(t_list **stack_a, t_list **stack_b);
 void	rot(t_list **stack, char mode);
